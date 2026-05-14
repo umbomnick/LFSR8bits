@@ -6,7 +6,7 @@ semente_inicial = 0b10010001
 bits_taps = [7, 5, 4, 3]
 estado_atual = semente_inicial
 
-print("=== Simulação LFSR Automática Infinita ===")
+print("=== Simulação LFSR ===")
 print("⚠️ Pressione [Ctrl + C] no teclado para parar o programa! ⚠️")
 time.sleep(2) # Dá 2 segundos para ler o aviso antes de começar
 
