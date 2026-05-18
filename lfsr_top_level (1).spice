@@ -1,0 +1,121 @@
+** sch_path: /home/carlos/CI_FINAL/lfsr_top_level.sch
+**.subckt lfsr_top_level CLK RST
+*.ipin CLK
+*.ipin RST
+x1 net11 net7 net5 xor
+FF0 CLK net13 RST net12 net14 dff
+FF1 CLK net12 RST net15 net1 dff
+FF2 CLK net1 RST net16 net2 dff
+FF3 CLK net2 RST net10 net3 dff
+FF4 CLK net3 RST net8 net4 dff
+FF5 CLK net4 RST net17 net5 dff
+FF6 CLK net5 RST net18 net6 dff
+FF7 CLK net6 RST net19 net11 dff
+x2 net7 net9 net8 xor
+x11 net9 net13 net10 xor
+**** begin user architecture code
+
+
+Vvdd VDD GND 1.8
+Vclk CLK GND PULSE(0 1.8 0 100p 100p 5n 10n)
+Vrst RST GND PULSE(1.8 0 1n 100p 100p 15n 1)
+.control
+tran 100p 200n
+run
+plot v(clk) v(rst)
+.endc
+
+
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  /home/carlos/CI_FINAL/xor.sym # of pins=3
+** sym_path: /home/carlos/CI_FINAL/xor.sym
+** sch_path: /home/carlos/CI_FINAL/xor.sch
+.subckt xor A Ysaida B
+*.opin Ysaida
+*.ipin A
+*.ipin B
+M1 Abar A VDD VDD pmos w=2u l=0.18u m=1
+M2 Abar A GND GND nmos w=1u l=0.18u m=1
+M3 Bbar B VDD VDD pmos w=2u l=0.18u m=1
+M4 Bbar B GND GND nmos w=1u l=0.18u m=1
+M5 net1 A VDD VDD pmos w=4u l=0.18u m=1
+M6 Ysaida Bbar net1 VDD pmos w=4u l=0.18u m=1
+M7 net2 Abar VDD VDD pmos w=4u l=0.18u m=1
+M8 Ysaida B net2 VDD pmos w=4u l=0.18u m=1
+M9 Ysaida A net3 GND nmos w=2u l=0.18u m=1
+M10 net3 B GND GND nmos w=2u l=0.18u m=1
+M11 Ysaida Abar net4 GND nmos w=2u l=0.18u m=1
+M12 net4 Bbar GND GND nmos w=2u l=0.18u m=1
+.ends
+
+
+* expanding   symbol:  /home/carlos/CI_FINAL/dff.sym # of pins=5
+** sym_path: /home/carlos/CI_FINAL/dff.sym
+** sch_path: /home/carlos/CI_FINAL/dff.sch
+.subckt dff CLK D RST Q_SET Q_RST
+*.ipin D
+*.ipin CLK
+*.ipin RST
+*.opin Q_SET
+*.opin Q_RST
+TG1 D CLKb CLK net1 tg
+x1 CLK CLKb inv
+x3 RST RSTb inv
+x4 net3 net4 inv
+TG2 net4 CLK CLKb net1 tg
+x2 net1 RSTb net3 nand2
+TG3 net3 CLK CLKb net2 tg
+x5 net2 RSTb Q_SET nand2
+x6 Q_SET Q_RST inv
+TG4 Q_RST CLKb CLK net2 tg
+**** begin user architecture code
+RSTb
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/carlos/CI_FINAL/tg.sym # of pins=4
+** sym_path: /home/carlos/CI_FINAL/tg.sym
+** sch_path: /home/carlos/CI_FINAL/tg.sch
+.subckt tg IN C Cb OUT
+*.ipin C
+*.ipin Cb
+*.ipin IN
+*.opin OUT
+M1 OUT Cb IN VDD pmos w=4u l=0.18u m=1
+M2 IN C OUT GND nmos w=2u l=0.18u m=1
+.ends
+
+
+* expanding   symbol:  /home/carlos/CI_FINAL/inv.sym # of pins=2
+** sym_path: /home/carlos/CI_FINAL/inv.sym
+** sch_path: /home/carlos/CI_FINAL/inv.sch
+.subckt inv A Ysaida
+*.ipin A
+*.opin Ysaida
+M1 Ysaida A VDD VDD pmos w=4u l=0.18u m=1
+M2 Ysaida A GND GND nmos w=2u l=0.18u m=1
+**** begin user architecture code
+inv
+**** end user architecture code
+.ends
+
+
+* expanding   symbol:  /home/carlos/CI_FINAL/nand2.sym # of pins=3
+** sym_path: /home/carlos/CI_FINAL/nand2.sym
+** sch_path: /home/carlos/CI_FINAL/nand2.sch
+.subckt nand2 A B Ysaida
+*.opin Ysaida
+*.ipin A
+*.ipin B
+M1 Ysaida A VDD VDD pmos w=4u l=0.18u m=1
+M2 Ysaida B VDD VDD pmos w=4u l=0.18u m=1
+M3 Ysaida A net1 GND nmos w=4u l=0.18u m=1
+M4 net1 B GND GND nmos w=4u l=0.18u m=1
+.ends
+
+.GLOBAL GND
+.GLOBAL VDD
+.end
